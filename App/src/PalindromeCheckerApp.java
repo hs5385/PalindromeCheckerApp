@@ -1,28 +1,34 @@
+import java.util.Stack;
 public class PalindromeCheckerApp {
-    public boolean isPalindrome(String str) {
-        if (str == null) {
-            return false;
+    public static void main(String[] args) {
+        PalindromeCheckerApp app = new PalindromeCheckerApp();
+        String[] testCases = {"Level", "Hello", "A man, a plan, a canal: Panama", "12321"};
+        for (String test : testCases) {
+            System.out.println("Input: " + test);
+            System.out.println("Is Palindrome: " + app.checkPalindrome(test));
+            System.out.println("---");
         }
-        String normalized = str.replaceAll("\\s+", "").toLowerCase();
-
-        return checkLogic(normalized);
     }
-    private boolean checkLogic(String s) {
-        int left = 0;
-        int right = s.length() - 1;
-        while (left < right) {
-            if (s.charAt(left) != s.charAt(right)) {
+    public boolean checkPalindrome(String input) {
+        if (input == null) return false;
+        String cleanInput = preprocess(input);
+        return compareUsingStack(cleanInput);
+    }
+    private String preprocess(String input) {
+        return input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+    }
+    private boolean compareUsingStack(String text) {
+        Stack<Character> stack = new Stack<>();
+        int len = text.length();
+        for (int i = 0; i < len / 2; i++) {
+            stack.push(text.charAt(i));
+        }
+        int startOfSecondHalf = (len % 2 == 0) ? len / 2 : (len / 2) + 1;
+        for (int i = startOfSecondHalf; i < len; i++) {
+            if (stack.isEmpty() || text.charAt(i) != stack.pop()) {
                 return false;
             }
-            left++;
-            right--;
         }
         return true;
-    }
-    public static void main(String[] args) {
-        PalindromeCheckerApp checker = new PalindromeCheckerApp();
-        String input = "A man a plan a canal Panama";
-        System.out.println("Input: " + input);
-        System.out.println("Is Palindrome: " + checker.isPalindrome(input));
     }
 }
