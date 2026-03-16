@@ -1,9 +1,11 @@
 import java.util.Stack;
 import java.util.ArrayDeque;
 import java.util.Deque;
+
 interface PalindromeStrategy {
     boolean isPalindrome(String text);
 }
+
 class StackStrategy implements PalindromeStrategy {
     @Override
     public boolean isPalindrome(String text) {
@@ -21,6 +23,7 @@ class StackStrategy implements PalindromeStrategy {
         return true;
     }
 }
+
 class DequeStrategy implements PalindromeStrategy {
     @Override
     public boolean isPalindrome(String text) {
@@ -36,26 +39,45 @@ class DequeStrategy implements PalindromeStrategy {
         return true;
     }
 }
-class PalindromCheckerApp {
+
+public class PalindromeCheckerApp {
     private PalindromeStrategy strategy;
+
     public void setStrategy(PalindromeStrategy strategy) {
         this.strategy = strategy;
     }
-    public boolean checkPalindrome(String input) {
-        if (input == null || strategy == null) return false;
+
+    public void comparePerformance(String input) {
+        if (input == null || strategy == null) return;
+
         String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-        return strategy.isPalindrome(cleanInput);
-    }
-}
-public class PalindromeCheckerApp {
-    public static void main(String[] args) {
-        PalindromCheckerApp service = new PalindromCheckerApp();
-        String test = "A man, a plan, a canal: Panama";
-        System.out.println("Testing Strategy Pattern for: " + test);
+
+        long startTime = System.nanoTime();
+        boolean result = strategy.isPalindrome(cleanInput);
+        long endTime = System.nanoTime();
+
+        long duration = endTime - startTime;
+
+        System.out.println("Strategy: " + strategy.getClass().getSimpleName());
+        System.out.println("Result: " + result);
+        System.out.println("Execution Time: " + duration + " ns");
         System.out.println("---");
-        service.setStrategy(new StackStrategy());
-        System.out.println("Using StackStrategy: " + service.checkPalindrome(test));
-        service.setStrategy(new DequeStrategy());
-        System.out.println("Using DequeStrategy: " + service.checkPalindrome(test));
+    }
+
+    public static void main(String[] args) {
+        PalindromeCheckerApp app = new PalindromeCheckerApp();
+
+        // Repeating the string to create a significant workload for benchmarking
+        String testInput = "A man, a plan, a canal: Panama".repeat(100);
+
+        System.out.println("UC13: Performance Comparison");
+        System.out.println("Testing input length: " + testInput.length() + " characters");
+        System.out.println("==========================================");
+
+        app.setStrategy(new StackStrategy());
+        app.comparePerformance(testInput);
+
+        app.setStrategy(new DequeStrategy());
+        app.comparePerformance(testInput);
     }
 }
