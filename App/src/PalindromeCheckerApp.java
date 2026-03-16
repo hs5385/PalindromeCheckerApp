@@ -1,9 +1,11 @@
 import java.util.Stack;
 import java.util.ArrayDeque;
 import java.util.Deque;
+
 interface PalindromeStrategy {
     boolean isPalindrome(String text);
 }
+
 class StackStrategy implements PalindromeStrategy {
     @Override
     public boolean isPalindrome(String text) {
@@ -21,6 +23,7 @@ class StackStrategy implements PalindromeStrategy {
         return true;
     }
 }
+
 class DequeStrategy implements PalindromeStrategy {
     @Override
     public boolean isPalindrome(String text) {
@@ -36,26 +39,49 @@ class DequeStrategy implements PalindromeStrategy {
         return true;
     }
 }
+
 class PalindromCheckerApp {
     private PalindromeStrategy strategy;
+
     public void setStrategy(PalindromeStrategy strategy) {
         this.strategy = strategy;
     }
-    public boolean checkPalindrome(String input) {
-        if (input == null || strategy == null) return false;
+
+    public void comparePerformance(String input) {
+        if (input == null || strategy == null) return;
+
         String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-        return strategy.isPalindrome(cleanInput);
+
+        // Capture start time
+        long startTime = System.nanoTime();
+
+        boolean result = strategy.isPalindrome(cleanInput);
+
+        // Capture end time
+        long endTime = System.nanoTime();
+        long duration = endTime - startTime;
+
+        System.out.println("Strategy: " + strategy.getClass().getSimpleName());
+        System.out.println("Result: " + result);
+        System.out.println("Execution Time: " + duration + " nanoseconds");
+        System.out.println("---");
     }
 }
+
 public class PalindromeCheckerApp {
     public static void main(String[] args) {
         PalindromCheckerApp service = new PalindromCheckerApp();
-        String test = "A man, a plan, a canal: Panama";
-        System.out.println("Testing Strategy Pattern for: " + test);
-        System.out.println("---");
+
+        // Using a longer string to make the performance difference more noticeable
+        String test = "Madam, in Eden, I'm Adam. ".repeat(100);
+
+        System.out.println("Performance Comparison (UC13)");
+        System.out.println("==============================");
+
         service.setStrategy(new StackStrategy());
-        System.out.println("Using StackStrategy: " + service.checkPalindrome(test));
+        service.comparePerformance(test);
+
         service.setStrategy(new DequeStrategy());
-        System.out.println("Using DequeStrategy: " + service.checkPalindrome(test));
+        service.comparePerformance(test);
     }
 }
