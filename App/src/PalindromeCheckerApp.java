@@ -3,21 +3,26 @@ public class PalindromeCheckerApp {
         if (str == null) {
             return false;
         }
-        return checkRecursive(str, 0, str.length() - 1);
+        String normalized = str.replaceAll("\\s+", "").toLowerCase();
+
+        return checkLogic(normalized);
     }
-    private boolean checkRecursive(String str, int start, int end) {
-        if (start >= end) {
-            return true;
+    private boolean checkLogic(String s) {
+        int left = 0;
+        int right = s.length() - 1;
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
         }
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-        return checkRecursive(str, start + 1, end - 1);
+        return true;
     }
     public static void main(String[] args) {
         PalindromeCheckerApp checker = new PalindromeCheckerApp();
-        String word = "racecar";
-        boolean result = checker.isPalindrome(word);
-        System.out.println("Is '" + word + "' a palindrome? " + result);
+        String input = "A man a plan a canal Panama";
+        System.out.println("Input: " + input);
+        System.out.println("Is Palindrome: " + checker.isPalindrome(input));
     }
 }
