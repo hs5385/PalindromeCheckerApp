@@ -1,19 +1,29 @@
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
+import java.util.Scanner;
 public class PalindromeCheckerApp {
     public static void main(String[] args) {
-        String input = "madam";
-        boolean result = isPalindrome(input);
-        System.out.println("Is '" + input + "' a palindrome? " + result);
-    }
-    public static boolean isPalindrome(String text) {
-        Stack<Character> stack = new Stack<>();
-        for (int i = 0; i < text.length(); i++) {
-            stack.push(text.charAt(i));
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        if (check(input)) {
+            System.out.println("Palindrome");
+        } else {
+            System.out.println("Not a Palindrome");
         }
-        for (int i = 0; i < text.length(); i++) {
-            char originalChar = text.charAt(i);
-            char reversedChar = stack.pop();
-            if (originalChar != reversedChar) {
+        scanner.close();
+    }
+    public static boolean check(String text) {
+        String clean = text.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        if (clean.isEmpty()) return true;
+        Queue<Character> queue = new LinkedList<>();
+        Stack<Character> stack = new Stack<>();
+        for (char c : clean.toCharArray()) {
+            queue.add(c);
+            stack.push(c);
+        }
+        while (!queue.isEmpty()) {
+            if (!queue.remove().equals(stack.pop())) {
                 return false;
             }
         }
