@@ -40,7 +40,7 @@ class DequeStrategy implements PalindromeStrategy {
     }
 }
 
-class PalindromCheckerApp {
+public class PalindromeCheckerApp {
     private PalindromeStrategy strategy;
 
     public void setStrategy(PalindromeStrategy strategy) {
@@ -52,36 +52,32 @@ class PalindromCheckerApp {
 
         String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-        // Capture start time
         long startTime = System.nanoTime();
-
         boolean result = strategy.isPalindrome(cleanInput);
-
-        // Capture end time
         long endTime = System.nanoTime();
+
         long duration = endTime - startTime;
 
         System.out.println("Strategy: " + strategy.getClass().getSimpleName());
         System.out.println("Result: " + result);
-        System.out.println("Execution Time: " + duration + " nanoseconds");
+        System.out.println("Execution Time: " + duration + " ns");
         System.out.println("---");
     }
-}
 
-public class PalindromeCheckerApp {
     public static void main(String[] args) {
-        PalindromCheckerApp service = new PalindromCheckerApp();
+        PalindromeCheckerApp app = new PalindromeCheckerApp();
 
-        // Using a longer string to make the performance difference more noticeable
-        String test = "Madam, in Eden, I'm Adam. ".repeat(100);
+        // Repeating the string to create a significant workload for benchmarking
+        String testInput = "A man, a plan, a canal: Panama".repeat(100);
 
-        System.out.println("Performance Comparison (UC13)");
-        System.out.println("==============================");
+        System.out.println("UC13: Performance Comparison");
+        System.out.println("Testing input length: " + testInput.length() + " characters");
+        System.out.println("==========================================");
 
-        service.setStrategy(new StackStrategy());
-        service.comparePerformance(test);
+        app.setStrategy(new StackStrategy());
+        app.comparePerformance(testInput);
 
-        service.setStrategy(new DequeStrategy());
-        service.comparePerformance(test);
+        app.setStrategy(new DequeStrategy());
+        app.comparePerformance(testInput);
     }
 }
