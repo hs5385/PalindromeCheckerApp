@@ -1,32 +1,59 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Scanner;
-public class PalindromeChecker {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter string: ");
-        String input = scanner.nextLine();
-        if (isPalindromeDeque(input)) {
-            System.out.println("Result: Palindrome");
-        } else {
-            System.out.println("Result: Not a Palindrome");
-        }
-        scanner.close();
+class Node {
+    char data;
+    Node next;
+    Node(char data) {
+        this.data = data;
+        this.next = null;
     }
-    public static boolean isPalindromeDeque(String text) {
-        String cleanText = text.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-        if (cleanText.isEmpty()) return true;
-        Deque<Character> charDeque = new ArrayDeque<>();
-        for (char ch : cleanText.toCharArray()) {
-            charDeque.addLast(ch);
+}
+public class PalindromeCheckerApp {
+    public boolean isPalindrome(String str) {
+        if (str == null || str.isEmpty()) return true;
+        Node head = convertToLinkedList(str);
+        Node slow = head;
+        Node fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
         }
-        while (charDeque.size() > 1) {
-            Character front = charDeque.removeFirst();
-            Character rear = charDeque.removeLast();
-            if (!front.equals(rear)) {
-                return false;
+        Node secondHalf = reverseList(slow);
+        Node firstHalf = head;
+        Node temp = secondHalf;
+        boolean result = true;
+        while (temp != null) {
+            if (firstHalf.data != temp.data) {
+                result = false;
+                break;
             }
+            firstHalf = firstHalf.next;
+            temp = temp.next;
         }
-        return true;
+        reverseList(secondHalf);
+        return result;
+    }
+    private Node convertToLinkedList(String str) {
+        Node head = new Node(str.charAt(0));
+        Node current = head;
+        for (int i = 1; i < str.length(); i++) {
+            current.next = new Node(str.charAt(i));
+            current = current.next;
+        }
+        return head;
+    }
+    private Node reverseList(Node head) {
+        Node prev = null;
+        Node current = head;
+        while (current != null) {
+            Node nextNode = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextNode;
+        }
+        return prev;
+    }
+    public static void main(String[] args) {
+        PalindromeCheckerApp checker = new PalindromeCheckerApp();
+        String input = "racecar";
+        System.out.println("Is \"" + input + "\" a palindrome? " + checker.isPalindrome(input));
     }
 }
